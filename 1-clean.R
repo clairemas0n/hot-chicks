@@ -258,6 +258,20 @@ bom_summary <- met %>% group_by(season.x, days1Nov.x) %>% summarise(max_wbgt = m
 bom_summary <- bom_summary %>% group_by(season.x) %>% 
   mutate(wbgtBOM4= rollsumr(max_wbgt, k = 4, fill = NA))
 
+# combine survival and weather data 
+
+kpdf$days1Nov <- as.integer(kpdf$time)
+
+# summarise met to daily max for each?? 
+met_summary <- met %>% group_by(season.x, days1Nov.x) %>% summarise(max_wbgt= max(wbgt))
+
+met_summary <- rename(met_summary, season = season.x)
+met_summary <- rename(met_summary, days1Nov = days1Nov.x)
+kpdf <- rename(kpdf, days1Nov = days1Nov.x)
+
+
+kpmet <- left_join(kpdf, met_summary, by=c("season", "days1Nov"))
+glimpse(kpmet)
 
 
 
